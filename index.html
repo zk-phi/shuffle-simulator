@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>DDR HS-Table</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="DDR HS-Table">
+    <script src="https://cdn.jsdelivr.net/npm/vue" type="text/javascript"></script>
+    <style>
+table { width: 100% }
+td { height: 16px }
+    </style>
+  </head>
+
+  <body>
+    <div id="app">
+
+      <h1>シャッフルシミュレーション君</h1>
+
+      <table>
+        <tr>
+          <td v-for="card in deck" :style="{ backgroundColor: card }"> </td>
+        </tr>
+      </table>
+
+      <p>
+        <button @click="hindu">Hindu Shuffle</button>
+        (Buckets:
+        <input type="number" v-model="hinduBuckets" :disabled="randomizeHinduBuckets" />
+        <label><input type="checkbox" v-model="randomizeHinduBuckets" />Randomize</label>
+        )
+      </p>
+
+      <p>
+        <button @click="deal">Deal Shuffle</button>
+        (Buckets: <input type="number" v-model="dealBuckets" />)
+      </p>
+
+      <p>
+        <button @click="faro">Faro Shuffle</button>
+      </p>
+
+    </div>
+
+    <script>
+const vm = new Vue({
+    el: "#app",
+    data: {
+        deck: [
+            /* 15 */
+            'red', 'red', 'red', 'red', 'red',
+            'red', 'red', 'red', 'red', 'red',
+            'red', 'red', 'red', 'red', 'red',
+            /* 10 */
+            'orange', 'orange', 'orange', 'orange', 'orange',
+            'orange', 'orange', 'orange', 'orange', 'orange',
+            /* 10 */
+            'yellow', 'yellow', 'yellow', 'yellow', 'yellow',
+            'yellow', 'yellow', 'yellow', 'yellow', 'yellow',
+            /* 10 */
+            'green', 'green', 'green', 'green', 'green',
+            'green', 'green', 'green', 'green', 'green',
+            /* 15 */
+            'blue', 'blue', 'blue', 'blue', 'blue',
+            'blue', 'blue', 'blue', 'blue', 'blue',
+            'blue', 'blue', 'blue', 'blue', 'blue'
+        ],
+        dealBuckets: 8,
+        hinduBuckets: 10,
+        randomizeHinduBuckets: true
+    },
+    methods: {
+        deal: function () {
+            var buckets = [];
+            for (var i = 0, j = 0; i < vm.deck.length; i++) {
+                if (!buckets[j]) {
+                    buckets[j] = [vm.deck[i]];
+                } else {
+                    buckets[j].push(vm.deck[i]);
+                }
+                j = (j + 1) % vm.dealBuckets;
+            }
+            vm.deck = Array.prototype.concat.apply([], buckets);
+        },
+        faro: function () {
+            var newDeck = [];
+            for (var i = 0; i < vm.deck.length; i++) {
+                var ix = i % 2 ? (
+                    Math.floor((i - 1) / 2) + Math.floor(vm.deck.length / 2)
+                ) : (
+                    Math.floor(i / 2)
+                );
+                newDeck[i] = vm.deck[ix];
+            }
+            vm.deck = newDeck;
+        },
+        hindu: function () {
+            var bucketSize = Math.floor(vm.deck.length / vm.hinduBuckets);
+            var lastBucketSize = bucketSize + vm.deck.length % vm.hinduBuckets;
+            var newDeck = [];
+            for (var i = 0; i < vm.hinduBuckets - 1; i++) {
+                newDeck = vm.deck.slice(i * bucketSize, (i + 1) * bucketSize).concat(newDeck);
+            }
+            newDeck = vm.deck.slice((vm.hinduBuckets - 1) * bucketSize).concat(newDeck);
+            vm.deck = newDeck;
+            if (vm.randomizeHinduBuckets) {
+                vm.hinduBuckets = Math.floor(Math.random() * 8 + 3);
+            }
+        }
+    }
+});
+    </script>
+  </body>
+
+</html>
