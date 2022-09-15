@@ -26,20 +26,20 @@ td { height: 16px }
       </table>
 
       <p>
-        <button @click="hindu">Hindu Shuffle</button>
-        (Buckets:
+        <button @click="hindu">ヒンズー</button>
+        (一度に手に取る枚数:
         <input type="number" v-model="hinduBuckets" :disabled="randomizeHinduBuckets" />
-        <label><input type="checkbox" v-model="randomizeHinduBuckets" />Randomize</label>
+        <label><input type="checkbox" v-model="randomizeHinduBuckets" />ランダム</label>
         )
       </p>
 
       <p>
-        <button @click="deal">Deal Shuffle</button>
-        (Buckets: <input type="number" v-model="dealBuckets" />)
+        <button @click="deal">ディール</button>
+        (バケツ数: <input type="number" v-model="dealBuckets" />)
       </p>
 
       <p>
-        <button @click="faro">Faro Shuffle</button>
+        <button @click="faro">ファロー</button>
       </p>
 
     </div>
